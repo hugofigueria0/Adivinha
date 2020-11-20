@@ -1,5 +1,6 @@
 package pt.ipg.adivinha;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,12 +29,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        novoJogo();
+        if(savedInstanceState == null){
+            novoJogo();
+
+        }else {
+            numeroAdivinhar = savedInstanceState.getInt("NUM_ADIVINHAR");
+            tentativas = savedInstanceState.getInt("TENTATIVAS");
+            MostraTentativa();
+        }
+
     }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt("TENTATIVAS", tentativas);
+        outState.putInt("NUM_ADIVINHAR", numeroAdivinhar);
+
+        super.onSaveInstanceState(outState);
+    }
+
 
     private void novoJogo() {
         numeroAdivinhar = random.nextInt(10) + 1 ;
         tentativas = 0;
+        MostraTentativa();
+        getTextViewAcertou().setText("");
+        getEditTextNumero().setText("");
     }
 
     private EditText getEditTextNumero(){
