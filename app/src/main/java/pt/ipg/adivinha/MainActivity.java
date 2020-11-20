@@ -1,7 +1,9 @@
 package pt.ipg.adivinha;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -17,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText editTextNumero = null ;
     private TextView TextViewAcertou = null;
+    private TextView textViewTentativas = null;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +32,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void novoJogo() {
-        numeroAdivinhar = random.nextInt(10) +1 ;
+        numeroAdivinhar = random.nextInt(10) + 1 ;
         tentativas = 0;
     }
 
     private EditText getEditTextNumero(){
-        if(editTextNumero != null){
+        if(editTextNumero == null){
             editTextNumero= findViewById(R.id.editTextNumero);
         }
         return editTextNumero;
@@ -44,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
         return TextViewAcertou;
     }
 
+    public TextView getTextViewTentativas() {
+        if( textViewTentativas == null){
+            textViewTentativas = findViewById(R.id.textViewTentativas);
+        }
+        return textViewTentativas;
+    }
+
     public void Adivinha(View view) {
         int numero = getNumero();
         if(numero < 1 || numero >10 ){
@@ -52,14 +64,45 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        tentativas++;
+
+        MostraTentativa();
+
         if (numero == numeroAdivinhar){
-            getTextViewAcertou().setText("Acertou");
+            Acertou();
 
         }else if (numero < numeroAdivinhar){
             getTextViewAcertou().setText("O numero que estou a pensar é maior");
         }else{
             getTextViewAcertou().setText("O numero que estou a pensar é menor");
         }
+    }
+
+    private void MostraTentativa() {
+        getTextViewTentativas().setText(getString(R.string.tentativas) + tentativas);
+    }
+
+    private void Acertou() {
+        getTextViewAcertou().setText("Acertou");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Acertou");
+        builder.setMessage(R.string.jogar_novamente);
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              novoJogo();
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        builder.show();
     }
 
     private int getNumero() {

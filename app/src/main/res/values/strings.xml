@@ -3,4 +3,6 @@
     <string name="numero">Numero</string>
     <string name="adivinha">Adivinha</string>
     <string name="numeroInvalido">NUMERO INVALIDO</string>
+    <string name="jogar_novamente">Pretende jogar novamente?</string>
+    <string name="tentativas">\"tentativas : \"</string>
 </resources>
